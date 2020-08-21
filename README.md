@@ -43,7 +43,7 @@ The script takes the following parameters:
 		
 	`SET variable_name=value e.g.`
 	
-	`SET GOOGLE_APPLICATION_CREDENTIALS=C:/asoba/auth.json`
+	`SET GOOGLE_APPLICATION_CREDENTIALS=~/asoba/auth.json`
 	
 
 ## SAMPLE RUN:
