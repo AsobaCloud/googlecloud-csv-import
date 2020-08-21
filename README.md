@@ -42,6 +42,7 @@ The script takes the following parameters:
 		It is used for credentials or anything else you may wish to expose as environment variable. Environment variables are inturn declared as 
 		
 	`SET variable_name=value e.g.`
+	
 	`SET GOOGLE_APPLICATION_CREDENTIALS=C:/asoba/auth.json`
 	
 
