@@ -1,5 +1,5 @@
-# ona-google-cloud-pipeline
-Pipeline for migrating API data into Google Cloud Storage and BigQuery
+# Ona Google Cloud Pipeline
+Python pipeline for migrating API data into Google Cloud Storage and BigQuery
 
 
 ## SCRIPT
@@ -10,7 +10,7 @@ The script load_local_csv_to_storage_to_bq.py is the python script that loads a 
 ## USAGE
 The script takes the following parameters:
 `-C file_path`
-	 It is the file path of the consolidated json config file. Defaults to C:/asoba/bq_config.json.  Optional 
+	 It is the file path of the consolidated json config file. Defaults to ~/asoba/bq_config.json.  Optional 
 	 
 `-D target dataset name `
 	The name of the dataset where the csv file will be uploaded as a target table. If Big Query loading is not done then this argument is ignored. Required. 
@@ -37,20 +37,21 @@ The script takes the following parameters:
 - google-cloud-bigquery python package to be installed.
 - google-cloud-storage python packahe to be installed.
 - python-dotenv should be installed
-- `C:/asoba/bq_config.json` file should be present. Sample provided in the bundle. Location can be different  but would need to be passed to the script at runtime with -C option.
+- `bq_config.json` file should be present. Sample provided in the bundle. Location can be different  but would need to be passed to the script at runtime with -C option.
 - An env folder should be created somewhere on file system to hold the file containing environment variables. The reference to the environment file is in the config json file with the key user_env_file.
 		It is used for credentials or anything else you may wish to expose as environment variable. Environment variables are inturn declared as 
-		`SET variable_name=value e.g.`
-		`SET GOOGLE_APPLICATION_CREDENTIALS=C:/asoba/auth.json`
+		
+	`SET variable_name=value e.g.`
+	`SET GOOGLE_APPLICATION_CREDENTIALS=C:/asoba/auth.json`
 	
 
 ## SAMPLE RUN:
-	`C:\asoba>python load_local_csv_to_storage_to_bq.py -D ingest_geographies -F C:/asoba/sql_runner_25zdqcrjpfsgdq_2020-08-11_07-39-17.csv -B ingest_geographies -M STORAGE_ONLY`
+	`python load_local_csv_to_storage_to_bq.py -D ingest_geographies -F ~/asoba/sql_runner_25zdqcrjpfsgdq_2020-08-11_07-39-17.csv -B ingest_geographies -M STORAGE_ONLY`
 
 ## RESPONSE:
 json on successfull execution of the below format.
 
-	`{"project": "asoba-241019", "storage_status": 0, "table_status": 1, "storage_mode": "STORAGE_ONLY", "source_csv": "C:/asoba/sql_runner_28zdqcrjpfsgdq.csv", "storage": {"bucket": "ingest_geographies", "blob": "sql_runner_28zdqcrjpfsgdq.csv",  "blob_uri": "gs://ingest_geographies/sql_runner_28zdqcrjpfsgdq.csv"}}`
+	`{"project": "asoba-241019", "storage_status": 0, "table_status": 1, "storage_mode": "STORAGE_ONLY", "source_csv": "~/asoba/sql_runner_28zdqcrjpfsgdq.csv", "storage": {"bucket": "ingest_geographies", "blob": "sql_runner_28zdqcrjpfsgdq.csv",  "blob_uri": "gs://ingest_geographies/sql_runner_28zdqcrjpfsgdq.csv"}}`
 
 ## OTHER USAGES AND IMPROVEMENTS:
 In production mode can be run in a loop with csv, target table name and other parameters provided in a list.
