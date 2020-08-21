@@ -11,18 +11,25 @@ The script load_local_csv_to_storage_to_bq.py is the python script that loads a 
 The script takes the following parameters:
 `-C file_path`
 	 It is the file path of the consolidated json config file. Defaults to C:/asoba/bq_config.json.  Optional 
+	 
 `-D target dataset name `
 	The name of the dataset where the csv file will be uploaded as a target table. If Big Query loading is not done then this argument is ignored. Required. 
+	
 `-F file path`
 	It is the file path of the local csv file (with header) which is to be uploaded to the bucket and to biquery. Required
+	
 `-T tablename`
 	It is the name of the target table in the dataset which will hold the csv data. It defaults to the extension less csv filename. Optional
+	
 `-W write_mode`
 	It indicates whether the data is to be appended or the table should be truncated and reloaded. Defaults to whatever is in the config file. If absent there then defaults to WRITE_TRUNCATE. Optional
+	
 `-B bucket_name`
 	This is the name of the bucket into which the csv file is first loaded. Required
+	
 `-M storage mode`
 	Whether to load the bucket objecy as bigquery table. Optional. Values [ 'STORAGE_ONLY', 'BIGQUERY']. STORAGE_ONLY only uploads to cloud storage while as BIGQUERY first uploads to cloud storage and then to bug query.
+	
 
 ## SETUP AND PREREQUISITES
 
@@ -40,9 +47,9 @@ The script takes the following parameters:
 ## SAMPLE RUN:
 	`C:\asoba>python load_local_csv_to_storage_to_bq.py -D ingest_geographies -F C:/asoba/sql_runner_25zdqcrjpfsgdq_2020-08-11_07-39-17.csv -B ingest_geographies -M STORAGE_ONLY`
 
-RESPONSE:
+## RESPONSE:
 json on successfull execution of the below format.
-```{"project": "asoba-241019", "storage_status": 0, "table_status": 1, "storage_mode": "STORAGE_ONLY", "source_csv": "C:/asoba/sql_runner_28zdqcrjpfsgdq.csv", "storage": {"bucket": "ingest_geographies", "blob": "sql_runner_28zdqcrjpfsgdq.csv",  "blob_uri": "gs://ingest_geographies/sql_runner_28zdqcrjpfsgdq.csv"}}```
+`{"project": "asoba-241019", "storage_status": 0, "table_status": 1, "storage_mode": "STORAGE_ONLY", "source_csv": "C:/asoba/sql_runner_28zdqcrjpfsgdq.csv", "storage": {"bucket": "ingest_geographies", "blob": "sql_runner_28zdqcrjpfsgdq.csv",  "blob_uri": "gs://ingest_geographies/sql_runner_28zdqcrjpfsgdq.csv"}}`
 
 ## OTHER USAGES AND IMPROVEMENTS:
 In production mode can be run in a loop with csv, target table name and other parameters provided in a list.
