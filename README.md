@@ -42,9 +42,9 @@ The script takes the following parameters:
 
 RESPONSE:
 json on successfull execution of the below format.
-{"project": "asoba-241019", "storage_status": 0, "table_status": 1, "storage_mode": "STORAGE_ONLY", "source_csv": "C:/asoba/sql_runner_28zdqcrjpfsgdq.csv", "storage": {"bucket": "ingest_geographies", "blob": "sql_runner_28zdqcrjpfsgdq.csv",  "blob_uri": "gs://ingest_geographies/sql_runner_28zdqcrjpfsgdq.csv"}}
+```{"project": "asoba-241019", "storage_status": 0, "table_status": 1, "storage_mode": "STORAGE_ONLY", "source_csv": "C:/asoba/sql_runner_28zdqcrjpfsgdq.csv", "storage": {"bucket": "ingest_geographies", "blob": "sql_runner_28zdqcrjpfsgdq.csv",  "blob_uri": "gs://ingest_geographies/sql_runner_28zdqcrjpfsgdq.csv"}}```
 
-OTHER USAGES AND IMPROVEMENTS:
+## OTHER USAGES AND IMPROVEMENTS:
 In production mode can be run in a loop with csv, target table name and other parameters provided in a list.
 response can be provided for exceptions to keep track of failed attempts instead of raising exceptions.
 
