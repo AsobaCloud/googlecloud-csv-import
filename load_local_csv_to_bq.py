@@ -6,7 +6,7 @@ import re
 from dotenv import load_dotenv
 
 #Set default values if any
-DEFAULT_CONFIG_FILE = 'C:/asoba/bq_config.json'
+DEFAULT_CONFIG_FILE = '/home/master/shared_folder/scripts/ona/bq/ona-google-cloud-pipeline/bq_config.json'
 
 #Argument Processing
 ap = argparse.ArgumentParser()
@@ -53,7 +53,7 @@ else:
 if config_dict.get("user_env_file"):
 	user_env_file=config_dict.get("user_env_file")
 else:
-	user_env_file = "C:/asoba/env/bq_pipeline.env"
+	user_env_file = "/home/master/shared_folder/scripts/ona/bq/env/bq_pipeline.env"
 load_dotenv(user_env_file)
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
