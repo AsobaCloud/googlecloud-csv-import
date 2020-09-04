@@ -80,7 +80,7 @@ print("Write Disposition:" + write_disposition + "\n")
 # Start Load
 table_id = project + '.' + target_dataset + '.' + target_tablename
 job_config = bigquery.LoadJobConfig(
-    source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True,
+    source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True, quote_character='"',field_delimiter=";",
 )
 job_config.write_disposition = write_disposition
 with open(source_csv, "rb") as source_file:

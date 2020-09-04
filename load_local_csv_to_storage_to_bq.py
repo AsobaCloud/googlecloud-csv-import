@@ -87,6 +87,8 @@ if storage_mode == 'BIGQUERY':
     skip_leading_rows=1,
     source_format=bigquery.SourceFormat.CSV,
 	autodetect=True,
+        field_delimiter=";",
+        quote_character='"',
 	)
 	load_job = bq_client.load_table_from_uri(
     gs_blob_uri, table_id, job_config=job_config
