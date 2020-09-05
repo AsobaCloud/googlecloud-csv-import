@@ -5,9 +5,20 @@ import os
 import argparse
 import re
 from dotenv import load_dotenv
+import logging
+from datetime import *
 
 #Set default values if any
 DEFAULT_CONFIG_FILE = '/home/master/shared_folder/scripts/ona/bq/ona-google-cloud-pipeline/bq_config.json'
+
+#Create and configure logger
+logging.basicConfig(filename="/home/master/shared_folder/logs/ona/bq/ona-google-cloud-pipeline_"+datetime.now().strftime('%Y_%m_%d')+".log",format='%(asctime)s %(message)s',filemode='a')
+
+#Creating an object
+logger=logging.getLogger()
+
+#Setting the threshold of logger to DEBUG
+logger.setLevel(logging.INFO)
 
 #Argument Processing
 ap = argparse.ArgumentParser()
@@ -23,7 +34,7 @@ args = vars(ap.parse_args())
 # Mandatory variables
 source_csv=args['SOURCE_CSV']
 target_dataset=args['TARGET_DATASET']
-bucket_name=args['TARGET_DATASET']
+bucket_name=args['BUCKET_NAME']
 
 #set variables and check file existence
 if args['CONFIG_FILE']:
@@ -31,10 +42,12 @@ if args['CONFIG_FILE']:
 else:
 	config_file = DEFAULT_CONFIG_FILE
 if not os.path.exists(config_file):
-	raise Exception("The config file providing authentication info and project name could not be found.")
+        logger.warning('The config file ['+ config_file +']providing authentication info and project name could not be found. Will exit.')
+        raise Exception("The config file providing authentication info and project name could not be found.")
 
 if not os.path.exists(source_csv):
-	raise Exception("The Source CSV file to be uploaded could not be found.")
+        logger.warning('The Source CSV file ['+source_csv+'] to be uploaded could not be found. Will exit.')
+        raise Exception("The Source CSV file to be uploaded could not be found.")
 if args['TARGET_TABLENAME']:
 	target_tablename = args['TARGET_TABLENAME']
 else:
@@ -72,8 +85,9 @@ bq_client = bigquery.Client()
 datasets = list(bq_client.list_datasets())
 dataset_names=[dataset.dataset_id for dataset in datasets]
 if target_dataset not in dataset_names:
-	raise Exception("Target dataset not in the project. Aborting.")
-
+        logger.warning('Target dataset ['+target_dataset+'] not found in the project. Will exit.')
+        raise Exception("Target dataset not in the project. Aborting.")
+logger.info("Starting upload of file ["+source_csv +"] to project [" + project + "], bucket [" +bucket_name +"] and dataset ["+ target_dataset +"] with storage mode ["+ storage_mode+"]")
 storage_status=1
 client = storage.Client()
 bucket = client.get_bucket(bucket_name)
@@ -99,7 +113,9 @@ if storage_mode == 'BIGQUERY':
 		table_status=0;
 	else:
 		table_status=1;
-	response={'project':project, 'storage_status':storage_status, 'table_status':table_status, 'storage_mode':storage_mode, 'source_csv':source_csv, 'storage':{'bucket':bucket_name, 'blob':str(blob.name), 'blob_uri':gs_blob_uri}, 'table': {'table_id':table_id, 'row_count_final':table.num_rows, 'column_count':len(table.schema)}}
+	response={'project':project, 'storage_status':storage_status, 'table_status':table_status, 'storage_mode':storage_mode, 'source_csv':source_csv, 'storage':{'bucket':bucket_name, 'blob':str(blob.name), 'blob_uri':gs_blob_uri}, 'table': {'table_id':table_id, 'row_count_final':table.num_rows, 'column_count':len(table.schema)}, 'mode': write_disposition}
 else:
 	response={'project':project, 'storage_status':storage_status, 'table_status':1, 'storage_mode':storage_mode, 'source_csv':source_csv, 'storage':{'bucket':bucket_name, 'blob':str(blob.name), 'blob_uri':gs_blob_uri}}
+logger.info(json.dumps(response))
 print(json.dumps(response))
+logger.info("Process Ended")

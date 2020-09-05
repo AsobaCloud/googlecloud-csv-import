@@ -4,9 +4,22 @@ import os
 import argparse
 import re
 from dotenv import load_dotenv
+import logging
+from datetime import *
 
 #Set default values if any
 DEFAULT_CONFIG_FILE = '/home/master/shared_folder/scripts/ona/bq/ona-google-cloud-pipeline/bq_config.json'
+
+#Create and configure logger
+logging.basicConfig(filename="/home/master/shared_folder/logs/ona/bq/ona-google-cloud-pipeline_"+datetime.now().strftime('%Y_%m_%d')+".log",format='%(asctime)s %(message)s',filemode='a')
+
+#Creating an object
+logger=logging.getLogger()
+
+#Setting the threshold of logger to DEBUG
+logger.setLevel(logging.INFO)
+
+
 
 #Argument Processing
 ap = argparse.ArgumentParser()
@@ -27,10 +40,11 @@ if args['CONFIG_FILE']:
 else:
 	config_file = DEFAULT_CONFIG_FILE
 if not os.path.exists(config_file):
-	raise Exception("The config file providing authentication info and project name could not be found.")
-
+        logger.warning('The config file ['+ config_file +']providing authentication info and project name could not be found. Will exit.')
+        raise Exception("The config file providing authentication info and project name could not be found.")
 if not os.path.exists(source_csv):
-	raise Exception("The Source CSV file to be uploaded could not be found.")
+        logger.warning('The Source CSV file ['+source_csv+'] to be uploaded could not be found. Will exit.')
+        raise Exception("The Source CSV file to be uploaded could not be found.")
 if args['TARGET_TABLENAME']:
 	target_tablename = args['TARGET_TABLENAME']
 else:
@@ -64,20 +78,12 @@ dataset_names=[dataset.dataset_id for dataset in datasets]
 
 
 if target_dataset not in dataset_names:
-	raise Exception("Target dataset not in the project. Aborting.")
+        logger.warning('Target dataset ['+target_dataset+'] not found in the project. Will exit.')
+        raise Exception("Target dataset not in the project. Aborting.")
 
 # Debug
-"""
-print("Executing with the config file at:< " + config_file + "> .....\n")
-print("Service Account file at: < " + config_dict["service_account_json_file"] + ">\n")
-print("Project:" + project + "\n")
-print("Target Dataset:" + target_dataset + "\n")
-print("Target Table:" + target_tablename + "\n")
-print("Source File:" + source_csv + "\n")
-print("Write Disposition:" + write_disposition + "\n")
-#
-"""
 # Start Load
+logger.info("Starting upload of file ["+source_csv +"] to project [" + project + "] and dataset ["+ target_dataset +"]")
 table_id = project + '.' + target_dataset + '.' + target_tablename
 job_config = bigquery.LoadJobConfig(
     source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True, quote_character='"',field_delimiter=";",
@@ -92,4 +98,6 @@ job.result()
 # Send back response.
 table = client.get_table(table_id)
 response={'status':0, 'source_csv':source_csv, 'target_dataset':target_dataset, 'target_table':target_tablename, 'project':project, 'table': {'table_id':table_id, 'row_count_final':table.num_rows, 'column_count':len(table.schema)}, 'mode': write_disposition}
+logger.info(json.dumps(response))
 print(json.dumps(response))
+logger.info("Process Ended")
