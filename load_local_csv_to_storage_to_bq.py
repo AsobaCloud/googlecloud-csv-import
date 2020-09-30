@@ -18,7 +18,7 @@ logging.basicConfig(filename="/home/master/shared_folder/logs/ona/bq/ona-google-
 logger=logging.getLogger()
 
 #Setting the threshold of logger to DEBUG
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 #Argument Processing
 ap = argparse.ArgumentParser()

@@ -58,4 +58,24 @@ json on successfull execution of the below format.
 In production mode can be run in a loop with csv, target table name and other parameters provided in a list.
 response can be provided for exceptions to keep track of failed attempts instead of raising exceptions.
 
+## SCHEDULING THE SCRIPT WITH INCRON
+The script load_local_csv_to_storage_to_bq.py is scheduled to get triggered whenever a new file "arrives" in the folder /home/master/shared_folder/export.
+Linux incron tool is used to schedule the trigger. Arriving a file means a file is moved to the folder. Creating or editing an existing file in the folder WILL NOT trigger the execution of the script.
 
+To create a new trigger/modify a trigger we use the command(per user):
+incrontab -e
+
+This opens incrontab entry for the currently logged in user.
+Every line in the table is one trigger.
+Every folder can have at max one trigger associated.
+Incrontab is not time scheduled unlike cron which defines timed triggers. Here the design is "on an event of file arrival".
+
+A sample of incrontab entry is as below:
+/home/master/shared_folder/export IN_MOVED_TO sudo python3 /home/master/shared_folder/scripts/ona/bq/ona-google-cloud-pipeline/load_local_csv_to_storage_to_bq.py -D ingest_geographies -F $@/$# -B ingest_geographies -M BIGQUERY
+
+The first part ie. /home/master/shared_folder/export indicates the folder which is to be observered.
+The second part ie. IN_MOVED_TO defines the trigger event, which in our case is a file is moved to the said folder.
+The rest of the command is the full command to execute with certain flags like $@ (folder) and $# (the file which is moved)
+
+Any other folders can be set to monitor file arrival on the same principle provided right permissions are available for the user.
+Also the file /etc/incron.allow should have the list of users(one per line) who are allowed to setup incron
