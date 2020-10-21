@@ -11,6 +11,7 @@ The script load_local_csv_to_storage_to_bq.py is a python script that loads a lo
 ## Usage
 
 The script takes the following parameters:
+
 `-C file_path`
 	 It is the file path of the consolidated json config file. Defaults to ~/asoba/bq_config.json.  Optional 
 	 
@@ -49,6 +50,7 @@ The script takes the following parameters:
 	
 
 ## Example:
+	
 	`python load_local_csv_to_storage_to_bq.py -D ingest_geographies -F ~/asoba/sql_runner_25zdqcrjpfsgdq_2020-08-11_07-39-17.csv -B ingest_geographies -M STORAGE_ONLY`
 
 ## Response:
@@ -65,7 +67,7 @@ The script load_local_csv_to_storage_to_bq.py is scheduled to get triggered when
 Linux incron tool is used to schedule the trigger. Arriving a file means a file is moved to the folder. Creating or editing an existing file in the folder WILL NOT trigger the execution of the script.
 
 To create a new trigger/modify a trigger we use the command(per user):
-incrontab -e
+`incrontab -e`
 
 This opens incrontab entry for the currently logged in user.
 Every line in the table is one trigger.
@@ -73,7 +75,7 @@ Every folder can have at max one trigger associated.
 Incrontab is not time scheduled unlike cron which defines timed triggers. Here the design is "on an event of file arrival".
 
 A sample of incrontab entry is as below:
-/home/master/shared_folder/export IN_MOVED_TO sudo python3 /home/master/shared_folder/scripts/ona/bq/ona-google-cloud-pipeline/load_local_csv_to_storage_to_bq.py -D ingest_geographies -F $@/$# -B ingest_geographies -M BIGQUERY
+`/home/master/shared_folder/export IN_MOVED_TO sudo python3 /home/master/shared_folder/scripts/ona/bq/ona-google-cloud-pipeline/load_local_csv_to_storage_to_bq.py -D ingest_geographies -F $@/$# -B ingest_geographies -M BIGQUERY`
 
 The first part ie. /home/master/shared_folder/export indicates the folder which is to be observered.
 The second part ie. IN_MOVED_TO defines the trigger event, which in our case is a file is moved to the said folder.
