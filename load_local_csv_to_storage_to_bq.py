@@ -103,6 +103,7 @@ if storage_mode == 'BIGQUERY':
 	autodetect=True,
         field_delimiter=";",
         quote_character='"',
+        write_disposition=write_disposition,
 	)
 	load_job = bq_client.load_table_from_uri(
     gs_blob_uri, table_id, job_config=job_config

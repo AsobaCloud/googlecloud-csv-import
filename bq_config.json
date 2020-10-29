@@ -1,5 +1,7 @@
 {
 	"project":"asoba-241019",
 	"write_disposition":"WRITE_TRUNCATE",
-	"user_env_file":"/home/master/shared_folder/scripts/ona/bq/env/bq_pipeline.env"
+	"user_env_file":"/home/master/shared_folder/scripts/ona/bq/env/bq_pipeline.env",
+	"quandl_bq_dataset":"ingest_explore",
+	"quandl_bucket":"ingest_geographies"
 }

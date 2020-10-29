@@ -86,7 +86,7 @@ if target_dataset not in dataset_names:
 logger.info("Starting upload of file ["+source_csv +"] to project [" + project + "] and dataset ["+ target_dataset +"]")
 table_id = project + '.' + target_dataset + '.' + target_tablename
 job_config = bigquery.LoadJobConfig(
-    source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True, quote_character='"',field_delimiter=";",
+    source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True, quote_character='"',field_delimiter=";",write_disposition=write_disposition,
 )
 job_config.write_disposition = write_disposition
 with open(source_csv, "rb") as source_file:
