@@ -73,6 +73,17 @@ data=requests.get(data_url)
 with open(local_file_name, 'wb') as f:
     for line in data:
         f.write(line)
+#convert to semicolon separated
+with open(local_file_name, mode="rU") as infile:
+    reader = csv.reader(infile, delimiter=',')
+    with open(local_file_name+'.tmp', mode="w") as outfile:
+        writer = csv.writer(outfile, delimiter=';')
+        writer.writerows(reader)
+if os.path.exists(local_file_name):
+    os.remove(local_file_name)
+if os.path.exists(local_file_name+'.tmp'):
+    os.rename(local_file_name+'.tmp',local_file_name)
+
 logger.info('Saved dataset: ' + dataset_id + ' to local file ' + local_file_name)
 if upload_to_bq:
     logger.info('Uploading dataset ' + dataset_id + ' to cloud and bigquery.')
